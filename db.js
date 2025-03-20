@@ -33,6 +33,28 @@ app.get('/get-users', async (req, res) => {
     }
 });
 
+// ✅ Get user by email and password
+app.post('/get-user-by-credentials', async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    try {
+        const user = await User.findOne({ email, password });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found with these credentials' });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error fetching user by credentials:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // ✅ Update user by ID
 app.put('/update-user/:id', async (req, res) => {
     const { id } = req.params;
@@ -87,9 +109,6 @@ app.delete('/delete-user-by-password', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
-
-
 
 // ✅ Start the server
 const PORT = 3000;
