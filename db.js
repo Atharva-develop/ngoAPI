@@ -5,7 +5,7 @@ const NGO = require('./model'); // Updated model import
 const app = express();
 app.use(express.json());
 
-mongoose.connect('mongodb+srv://Atharva:1am%40doctor@cluster0.oyxyq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect('mongodb+srv://Atharva:1am@doctor@cluster0.oyxyq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => console.log('✅ MongoDB connected'))
     .catch((err) => console.log('❌ Error connecting to MongoDB:', err));
 
