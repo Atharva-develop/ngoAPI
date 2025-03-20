@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 
-const ngoSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    phone: { type: String, required: true },
-    password: { type: String, required: true }
+const userSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    password: String,
+    phone: String, 
+    address: String // ✅ Fixed typo (address)
 });
 
-const NGO = mongoose.model('NGO', ngoSchema);
+const User = mongoose.model('User', userSchema);
 
-module.exports = NGO;
+module.exports = User;
