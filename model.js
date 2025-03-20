@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    password: String,
-    phone: String, 
-    address: String // ✅ Fixed typo (address)
+    name: { type: String, required: true }, // 👈 User name
+    email: { type: String, required: true, unique: true }, // 👈 User email (unique)
+    phone: { type: String, required: true }, // 👈 User phone
+    password: { type: String, required: true }, // 👈 User password
+    address: { type: String }, // 👈 User address (optional)
+    type: { type: String, enum: ['Restaurant', 'NGO'] }
 });
 
-const User = mongoose.model('User', userSchema);
+// 👇 Use the 'users' collection explicitly
+const User = mongoose.model('User', userSchema, 'users');
 
 module.exports = User;
