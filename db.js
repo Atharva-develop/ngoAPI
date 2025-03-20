@@ -16,7 +16,7 @@ mongoose.connect('mongodb+srv://Atharva:1am%40doctor@cluster0.oyxyq.mongodb.net/
 app.post('/add-user', async (req, res) => {
     const { name, email, years, phone } = req.body; // Updated fields
     try {
-        const user = await User.create({ name, email, password, phone, adress }); // Updated fields
+        const user = await User.create({ name, email, phone, password}); // Updated fields
         res.status(201).json(user);
     } catch (error) {
         res.status(500).json({ error: 'Failed to add user' });
