@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    age: Number,
-    phone: String // New field added
+const ngoSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    phone: { type: String, required: true },
+    password: { type: String, required: true }
 });
 
-const User = mongoose.model('User', userSchema);
+const NGO = mongoose.model('NGO', ngoSchema);
 
-module.exports = User;
+module.exports = NGO;
