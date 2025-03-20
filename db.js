@@ -13,15 +13,15 @@ mongoose.connect('mongodb+srv://Atharva:1am%40doctor@cluster0.oyxyq.mongodb.net/
 
 
 // ✅ Add user
-app.post('/add-user', async (req, res) => {
-    const { name, email, years, phone } = req.body; // Updated fields
-    try {
-        const user = await User.create({ name, email, password, phone, adress }); // Updated fields
-        res.status(201).json(user);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to add user' });
-    }
-});
+ app.post('/add-user', async (req, res) => {
+        const { name, email, phone, password, adress } = req.body; // Match the fields you need
+        try {
+            const user = await User.create({ name, email, phone, password, adress });
+            res.status(201).json(user);
+        } catch (error) {
+            res.status(500).json({ error: 'Failed to add user' });
+        }
+    });
 
 // ✅ Get all users
 app.get('/get-users', async (req, res) => {
