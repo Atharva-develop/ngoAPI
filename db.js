@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const User = require('./model');
+const {User, Food} = require('./model');
 
 const app = express();
 app.use(express.json());
@@ -83,24 +83,24 @@ app.put('/update-user/:id', async (req, res) => {
 });
 
 // ✅ Delete user by password
-app.delete('/delete-user-by-password', async (req, res) => {
-    const { password } = req.body;
-    console.log('Delete request with password:', password);
+app.delete('/delete-user-by-email', async (req, res) => {
+    const { email } = req.body;
+    console.log('Delete request with email:', email);
 
-    if (!password) {
-        return res.status(400).json({ error: 'Password is required' });
+    if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
     }
 
     try {
         // First find the user to confirm it exists
-        const user = await User.findOne({ password });
+        const user = await User.findOne({ email });
         console.log('Found user:', user);
-        
-        const deletedUser = await User.deleteOne({ password });
+    
+        const deletedUser = await User.deleteOne({ email});
         console.log('Delete result:', deletedUser);
         
         if (deletedUser.deletedCount === 0) {
-            return res.status(404).json({ error: 'User not found with this password' });
+            return res.status(404).json({ error: 'User not found with this email' });
         }
 
         res.status(200).json({ message: 'User deleted successfully' });
@@ -109,6 +109,85 @@ app.delete('/delete-user-by-password', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+
+app.post('/add-food', async (req, res) => {
+    const { name, email, phone, foodDescription, quantity, address } = req.body;
+    try {
+        const food = await Food.create({ name, email, phone, foodDescription, quantity, address });
+        res.status(201).json(food);
+    } catch (error) {
+        console.error('Error adding user:', error);
+        res.status(500).json({ error: 'Failed to add Food' });
+    }
+});
+
+// ✅ Get all users
+app.get('/get-food', async (req, res) => {
+    try {
+        const foods = await User.find();
+        console.log('Fetched users:', foods);
+        res.status(200).json(foods);
+    } catch (error) {
+        console.error('Error fetching foods:', error);
+        res.status(500).json({ error: 'Failed to fetch foods' });
+    }
+});
+
+app.post('/get-food-by-email', async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
+    }
+
+    try {
+        const food = await Food.find({ email });
+
+        if (!food) {
+            return res.status(404).json({ error: 'Food not found with these email' });
+        }
+
+        res.status(200).json(food);
+    } catch (error) {
+        console.error('Error fetching food by email:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/delete-food-by-id', async (req, res) => {
+    const { id } = req.body;
+    console.log('Delete request with id:', id);
+
+    if (!id) {
+        return res.status(400).json({ error: 'id is required' });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ error: 'Invalid food ID format' });
+    }
+
+    try {
+        // Check if food exists
+        const food = await Food.findOne({ _id: id });
+        if (!food) {
+            return res.status(404).json({ error: 'Food not found' });
+        }
+
+        // Delete food by ObjectId
+        const deletedFood = await Food.deleteOne({ _id: id });
+
+        if (deletedFood.deletedCount === 0) {
+            return res.status(404).json({ error: 'Food not found with this id' });
+        }
+
+        res.status(200).json({ message: 'Food deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting food:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 // ✅ Start the server
 const PORT = 3000;
