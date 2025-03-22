@@ -143,8 +143,8 @@ app.post('/add-food', async (req, res) => {
 // ✅ Get all users
 app.get('/get-food', async (req, res) => {
     try {
-        const foods = await User.find();
-        console.log('Fetched users:', foods);
+        const foods = await Food.find();
+        console.log('Fetched food:', foods);
         res.status(200).json(foods);
     } catch (error) {
         console.error('Error fetching foods:', error);
