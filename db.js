@@ -5,6 +5,24 @@ const {User, Food} = require('./model');
 const app = express();
 app.use(express.json());
 
+const allowedOrigins = ['http://localhost:5173','http://localhost:5174', 'https://atharva-develop.github.io'];
+
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+
+    next();
+});
+
 mongoose.connect('mongodb+srv://Atharva:1am%40doctor@cluster0.oyxyq.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => console.log('✅ MongoDB connected'))
     .catch((err) => console.log('❌ Error connecting to MongoDB:', err));
